@@ -59,7 +59,7 @@ jobs:
             printf "### Install\n\n"
             printf '```bash\n'
             printf "helm upgrade --install costpilot \\\\\n"
-            printf "  oci://ghcr.io/cost-pilot/helm/agent \\\\\n"
+            printf "  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \\\\\n"
             printf "  --version %s \\\\\n" "${VERSION_NUM}"
             printf "  --namespace costpilot --create-namespace \\\\\n"
             printf "  --set backend.ingesterEndpoint=eu\n"
@@ -72,7 +72,7 @@ jobs:
             printf "| Artefact | Reference |\n"
             printf "|----------|-----------|\n"
             printf "| Agent image | \`ghcr.io/cost-pilot/agent:%s\` |\n" "${VERSION_NUM}"
-            printf "| Helm chart (OCI) | \`oci://ghcr.io/cost-pilot/helm/agent:%s\` |\n" "${VERSION_NUM}"
+            printf "| Helm chart (OCI) | \`oci://ghcr.io/cost-pilot/helm/cost-pilot-agent:%s\` |\n" "${VERSION_NUM}"
           } > ./release-notes.md
 
       - name: Create GitHub Release
