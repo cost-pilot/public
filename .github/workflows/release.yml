@@ -37,7 +37,7 @@ jobs:
         run: |
           VERSION_NUM="${TAG#v}"
           mkdir -p ./charts
-          helm pull "oci://${REGISTRY}/${CHART_PREFIX}/agent" \
+          helm pull "oci://${REGISTRY}/${CHART_PREFIX}/cost-pilot-agent" \
             --version "${VERSION_NUM}" \
             --destination ./charts
 
