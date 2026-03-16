@@ -1,0 +1,18 @@
+# Kustomize base: renders the Helm chart with default values.
+# Apply with: kubectl apply -k examples/kustomize/overlays/production
+#
+# Requires helm-controller or kustomize 5.x with HelmCharts support.
+# Alternatively, render once with helm template and commit the output.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: costpilot
+
+# If using kustomize's helmCharts field (kustomize 5.x):
+helmCharts:
+  - name: agent
+    repo: oci://ghcr.io/cost-pilot/helm
+    version: "0.0.1"
+    releaseName: costpilot
+    namespace: costpilot
+    valuesFile: values.yaml

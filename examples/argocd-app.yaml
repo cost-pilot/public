@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: costpilot
+  namespace: argocd
+  # Ensure the app is deleted cleanly when removed from git
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # OCI Helm chart from GHCR
+    chart: agent
+    repoURL: ghcr.io/cost-pilot/helm
+    targetRevision: "0.0.1" # pin to a specific release
+    helm:
+      releaseName: costpilot
+      values: |
+        backend:
+          ingesterEndpoint: eu   # or us
+        secrets:
+          agent:
+            clusterApiKeySecretName: cp-agent-secret
+        image:
+          tag: "v0.0.1"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: costpilot
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

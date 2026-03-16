@@ -1,0 +1,9 @@
+backend:
+  ingesterEndpoint: eu
+
+secrets:
+  agent:
+    clusterApiKeySecretName: cp-agent-secret
+
+agent:
+  replicaCount: 3

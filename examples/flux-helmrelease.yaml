@@ -1,0 +1,41 @@
+---
+# HelmRepository pointing to the GHCR OCI registry
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: costpilot
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 1h
+  url: oci://ghcr.io/cost-pilot/helm
+---
+# HelmRelease that installs the agent into the costpilot namespace
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: costpilot
+  namespace: costpilot
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: agent
+      version: "0.0.1" # pin to a specific release
+      sourceRef:
+        kind: HelmRepository
+        name: costpilot
+        namespace: flux-system
+  values:
+    backend:
+      ingesterEndpoint: eu   # or us
+    secrets:
+      agent:
+        clusterApiKeySecretName: cp-agent-secret
+    image:
+      tag: "v0.0.1"
+  install:
+    createNamespace: true
+  upgrade:
+    remediation:
+      retries: 3
