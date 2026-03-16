@@ -3,16 +3,15 @@ kind: Application
 metadata:
   name: costpilot
   namespace: argocd
-  # Ensure the app is deleted cleanly when removed from git
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     # OCI Helm chart from GHCR
-    chart: agent
+    chart: cost-pilot-agent
     repoURL: ghcr.io/cost-pilot/helm
-    targetRevision: "0.0.1" # pin to a specific release
+    targetRevision: "0.1.0" # pin to a specific release
     helm:
       releaseName: costpilot
       values: |
@@ -21,8 +20,6 @@ spec:
         secrets:
           agent:
             clusterApiKeySecretName: cp-agent-secret
-        image:
-          tag: "v0.0.1"
   destination:
     server: https://kubernetes.default.svc
     namespace: costpilot

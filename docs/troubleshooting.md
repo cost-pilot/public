@@ -19,14 +19,14 @@ Common causes:
    ```bash
    kubectl logs -n costpilot -l app=cost-pilot-agent
    ```
-2. Confirm the correct region is set (`backend.ingesterEndpoint: eu` or `us`)
-3. Verify network egress is allowed — the agent needs outbound HTTPS to `ingest.eu.costpilot.io` (or `ingest.us.costpilot.io`)
+2. Confirm the correct region is set (`backend.ingesterEndpoint: eu`)
+3. Verify network egress is allowed — the agent needs outbound HTTPS to `ingest.eu.cost-pilot.com`
 
 ## Checking agent connectivity
 
 ```bash
 kubectl exec -n costpilot deploy/cost-pilot-operator -- \
-  wget -qO- https://ingest.eu.costpilot.io/health
+  wget -qO- https://ingest.eu.cost-pilot.com/health
 ```
 
 ## Helm install fails: chart not found
@@ -37,7 +37,20 @@ OCI Helm charts require Helm 3.8+. Check your version:
 helm version
 ```
 
-If you're behind a registry mirror that doesn't support OCI, contact support for an alternative install method.
+Make sure you're using the correct chart name:
+
+```bash
+helm upgrade --install costpilot \
+  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
+  --namespace costpilot
+```
+
+If you're behind a registry mirror that doesn't support OCI, download the chart `.tgz` from the [releases page](https://github.com/cost-pilot/public/releases) and install directly:
+
+```bash
+helm upgrade --install costpilot ./cost-pilot-agent-0.1.0.tgz \
+  --namespace costpilot
+```
 
 ## Getting diagnostic info
 
@@ -50,6 +63,9 @@ kubectl get events -n costpilot --sort-by='.lastTimestamp'
 
 # Current chart values
 helm get values costpilot -n costpilot
+
+# Agent version
+helm get metadata costpilot -n costpilot | grep appVersion
 ```
 
 ## Still stuck?

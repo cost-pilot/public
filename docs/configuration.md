@@ -4,47 +4,47 @@ All configuration is passed as Helm values. Override with `--set key=value` or a
 
 ## Image
 
-| Key                       | Type   | Default               | Description                                     |
-| ------------------------- | ------ | --------------------- | ----------------------------------------------- |
-| `image.repository`        | string | `cost-pilot/agent`    | Image repository (under `global.imageRegistry`) |
-| `image.tag`               | string | chart `appVersion`    | Image tag — pin this for production             |
-| `image.pullPolicy`        | string | `IfNotPresent`        | Kubernetes pull policy                          |
-| `global.imageRegistry`    | string | `ghcr.io/cost-pilot` | Registry prefix                                 |
-| `global.imagePullSecrets` | list   | `[]`                  | Pull secrets if registry is private             |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `image.repository` | string | `agent` | Image repository (under `global.imageRegistry`) |
+| `image.tag` | string | chart `appVersion` | Image tag — pin this for production |
+| `image.pullPolicy` | string | `IfNotPresent` | Kubernetes pull policy |
+| `global.imageRegistry` | string | `ghcr.io/cost-pilot` | Registry prefix |
+| `global.imagePullSecrets` | list | `[]` | Pull secrets if registry is private |
 
 ## Backend
 
-| Key                        | Type   | Default | Description             |
-| -------------------------- | ------ | ------- | ----------------------- |
-| `backend.ingesterEndpoint` | string | `eu`    | CostPilot region — `eu` |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `backend.ingesterEndpoint` | string | `eu` | CostPilot region — `eu` |
 
 ## Agent
 
-| Key                            | Type   | Default | Description                                            |
-| ------------------------------ | ------ | ------- | ------------------------------------------------------ |
-| `agent.enabled`                | bool   | `true`  | Deploy the agent                                       |
-| `agent.replicaCount`           | int    | `3`     | Number of agent replicas (managed by operator)         |
-| `agent.config.intervalSeconds` | int    | `60`    | Metric collection interval in seconds                  |
-| `agent.config.peerPort`        | string | `18443` | Port for leader/follower coordination between replicas |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `agent.enabled` | bool | `true` | Deploy the agent |
+| `agent.replicaCount` | int | `3` | Number of agent replicas (managed by operator) |
+| `agent.config.intervalSeconds` | int | `60` | Metric collection interval in seconds |
+| `agent.config.peerPort` | string | `18443` | Port for leader/follower coordination between replicas |
 
 ## Operator
 
-| Key                                   | Type   | Default | Description                                   |
-| ------------------------------------- | ------ | ------- | --------------------------------------------- |
-| `operator.enabled`                    | bool   | `true`  | Deploy the operator                           |
-| `operator.replicaCount`               | int    | `1`     | Operator replicas (keep at 1)                 |
-| `operator.resources.requests.cpu`     | string | `50m`   | CPU request                                   |
-| `operator.resources.requests.memory`  | string | `64Mi`  | Memory request                                |
-| `operator.resources.limits.cpu`       | string | `100m`  | CPU limit                                     |
-| `operator.resources.limits.memory`    | string | `128Mi` | Memory limit                                  |
-| `operator.serviceAccount.create`      | bool   | `true`  | Create a dedicated service account            |
-| `operator.serviceAccount.annotations` | map    | `{}`    | Annotations (e.g. for IRSA/Workload Identity) |
-| `operator.rbac.create`                | bool   | `true`  | Create RBAC resources                         |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `operator.enabled` | bool | `true` | Deploy the operator |
+| `operator.replicaCount` | int | `1` | Operator replicas (keep at 1) |
+| `operator.resources.requests.cpu` | string | `50m` | CPU request |
+| `operator.resources.requests.memory` | string | `64Mi` | Memory request |
+| `operator.resources.limits.cpu` | string | `100m` | CPU limit |
+| `operator.resources.limits.memory` | string | `128Mi` | Memory limit |
+| `operator.serviceAccount.create` | bool | `true` | Create a dedicated service account |
+| `operator.serviceAccount.annotations` | map | `{}` | Annotations (e.g. for IRSA/Workload Identity) |
+| `operator.rbac.create` | bool | `true` | Create RBAC resources |
 
 ## Secrets
 
-| Key                                     | Type   | Default           | Description                                                |
-| --------------------------------------- | ------ | ----------------- | ---------------------------------------------------------- |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
 | `secrets.agent.clusterApiKeySecretName` | string | `cp-agent-secret` | Name of the Kubernetes secret containing `cluster-api-key` |
 
 The secret must exist before install:
@@ -59,10 +59,10 @@ kubectl create secret generic cp-agent-secret \
 
 ```yaml
 image:
-  tag: "v0.0.1" # Pin to a specific release
+  tag: "0.1.0" # Pin to a specific release
 
 backend:
-  ingesterEndpoint: eu # eu or us
+  ingesterEndpoint: eu
 
 agent:
   replicaCount: 3
@@ -87,7 +87,7 @@ Apply with:
 
 ```bash
 helm upgrade --install costpilot \
-  oci://ghcr.io/cost-pilot/helm/agent \
+  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
   --namespace costpilot \
   --values my-values.yaml
 ```

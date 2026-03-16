@@ -5,13 +5,13 @@ labels: bug
 ---
 
 **Agent version**
-<!-- helm get metadata costpilot -n costpilot | grep AppVersion -->
+<!-- helm get metadata costpilot -n costpilot | grep appVersion -->
 
 **Kubernetes version**
-<!-- kubectl version --short -->
+<!-- kubectl version -->
 
 **Install method**
-<!-- Helm / ArgoCD / Flux / kustomize -->
+<!-- Helm / ArgoCD / Flux / Kustomize / kubectl apply -->
 
 **What happened**
 
@@ -22,6 +22,7 @@ labels: bug
 kubectl get all -n costpilot
 kubectl get events -n costpilot --sort-by='.lastTimestamp'
 kubectl logs -n costpilot -l app=cost-pilot-operator --tail=50
+kubectl logs -n costpilot -l app=cost-pilot-agent --tail=50
 -->
 
 ```

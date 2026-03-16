@@ -20,8 +20,8 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: agent
-      version: "0.0.1" # pin to a specific release
+      chart: cost-pilot-agent
+      version: "0.1.0" # pin to a specific release
       sourceRef:
         kind: HelmRepository
         name: costpilot
@@ -32,8 +32,6 @@ spec:
     secrets:
       agent:
         clusterApiKeySecretName: cp-agent-secret
-    image:
-      tag: "v0.0.1"
   install:
     createNamespace: true
   upgrade:
