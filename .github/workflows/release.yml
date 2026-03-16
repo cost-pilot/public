@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  repository_dispatch:
+    types: [agent-release]
+
+env:
+  REGISTRY: ghcr.io
+  CHART_PREFIX: cost-pilot/helm
+
+jobs:
+  github-release:
+    name: "Create GitHub Release"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      packages: read
+    env:
+      TAG: ${{ github.event.client_payload.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: latest
+
+      - name: Log in to Helm registry
+        run: |
+          helm registry login "${REGISTRY}" \
+            --username "${{ github.actor }}" \
+            --password "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Pull chart from OCI
+        run: |
+          VERSION_NUM="${TAG#v}"
+          mkdir -p ./charts
+          helm pull "oci://${REGISTRY}/${CHART_PREFIX}/agent" \
+            --version "${VERSION_NUM}" \
+            --destination ./charts
+
+      - name: Render install.yaml
+        run: |
+          VERSION_NUM="${TAG#v}"
+          CHART_FILE=$(ls ./charts/cost-pilot-agent-*.tgz | head -n 1)
+          helm template costpilot "${CHART_FILE}" \
+            --namespace costpilot \
+            --set image.tag="${VERSION_NUM}" \
+            --set backend.ingesterEndpoint=eu \
+            > ./install.yaml
+
+      - name: Generate release notes
+        run: |
+          VERSION_NUM="${TAG#v}"
+          {
+            printf "## CostPilot Agent %s\n\n" "${TAG}"
+            printf "### Install\n\n"
+            printf '```bash\n'
+            printf "helm upgrade --install costpilot \\\\\n"
+            printf "  oci://ghcr.io/cost-pilot/helm/agent \\\\\n"
+            printf "  --version %s \\\\\n" "${VERSION_NUM}"
+            printf "  --namespace costpilot --create-namespace \\\\\n"
+            printf "  --set backend.ingesterEndpoint=eu\n"
+            printf '```\n\n'
+            printf "Or apply the default manifest directly:\n\n"
+            printf '```bash\n'
+            printf "kubectl apply -f https://github.com/cost-pilot/public/releases/download/%s/install.yaml\n" "${TAG}"
+            printf '```\n\n'
+            printf "### Artefacts\n\n"
+            printf "| Artefact | Reference |\n"
+            printf "|----------|-----------|\n"
+            printf "| Agent image | \`ghcr.io/cost-pilot/agent:%s\` |\n" "${VERSION_NUM}"
+            printf "| Helm chart (OCI) | \`oci://ghcr.io/cost-pilot/helm/agent:%s\` |\n" "${VERSION_NUM}"
+          } > ./release-notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION_NUM="${TAG#v}"
+          CHART_FILE=$(ls ./charts/cost-pilot-agent-*.tgz | head -n 1)
+          gh release create "${TAG}" \
+            --title "CostPilot Agent ${TAG}" \
+            --notes-file ./release-notes.md \
+            "${CHART_FILE}#Helm chart (cost-pilot-agent-${VERSION_NUM}.tgz)" \
+            "install.yaml#Default install manifest (install.yaml)"
