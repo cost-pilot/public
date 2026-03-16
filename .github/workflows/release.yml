@@ -15,7 +15,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
-      packages: read
     env:
       TAG: ${{ github.event.client_payload.tag }}
     steps:
@@ -27,11 +26,20 @@ jobs:
         with:
           version: latest
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: cost-pilot
+          repositories: agent
+
       - name: Log in to Helm registry
         run: |
           helm registry login "${REGISTRY}" \
-            --username "${{ github.actor }}" \
-            --password "${{ secrets.GITHUB_TOKEN }}"
+            --username "x-access-token" \
+            --password "${{ steps.app-token.outputs.token }}"
 
       - name: Pull chart from OCI
         run: |
