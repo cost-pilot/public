@@ -11,11 +11,11 @@ A lightweight agent runs in your cluster, collecting pod, node, and resource met
 
 ```
 ┌─────────────────┐     ┌──────────────────────┐     ┌──────────────────┐
-│  Your Cluster    │     │  CostPilot Platform  │     │    Dashboard     │
-│                  │     │                      │     │                  │
-│  Operator (1)    │────▶│  Ingestion           │────▶│  Cost breakdown  │
-│    └─ Agent (3)  │     │  Processing          │     │  50+ insights    │
-│                  │     │  Analysis            │     │  Budget alerts   │
+│  Your Cluster   │     │  CostPilot Platform  │     │    Dashboard     │
+│                 │     │                      │     │                  │
+│  Operator (1)   │────▶│  Ingestion           │────▶│  Cost breakdown  │
+│    └─ Agent (3) │     │  Processing          │     │  50+ insights    │
+│                 │     │  Analysis            │     │  Budget alerts   │
 └─────────────────┘     └──────────────────────┘     └──────────────────┘
 ```
 
@@ -43,7 +43,7 @@ kubectl create secret generic cp-agent-secret \
 
 ```bash
 helm upgrade --install costpilot \
-  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
+  oci://ghcr.io/cost-pilot/helm/agent \
   --namespace costpilot \
   --set backend.ingesterEndpoint=eu
 ```
@@ -62,29 +62,29 @@ Log in at [app.cost-pilot.com](https://app.cost-pilot.com) — cost data typical
 
 ## Configuration
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `backend.ingesterEndpoint` | Region: `eu` | `eu` |
-| `secrets.agent.clusterApiKeySecretName` | Name of the secret containing `cluster-api-key` | `cp-agent-secret` |
-| `agent.replicaCount` | Number of agent replicas | `3` |
-| `agent.config.intervalSeconds` | Metric collection interval (seconds) | `60` |
-| `image.tag` | Pin to a specific agent version | Chart `appVersion` |
+| Parameter                               | Description                                     | Default            |
+| --------------------------------------- | ----------------------------------------------- | ------------------ |
+| `backend.ingesterEndpoint`              | Region: `eu`                                    | `eu`               |
+| `secrets.agent.clusterApiKeySecretName` | Name of the secret containing `cluster-api-key` | `cp-agent-secret`  |
+| `agent.replicaCount`                    | Number of agent replicas                        | `3`                |
+| `agent.config.intervalSeconds`          | Metric collection interval (seconds)            | `60`               |
+| `image.tag`                             | Pin to a specific agent version                 | Chart `appVersion` |
 
 Full values reference: [docs/configuration.md](docs/configuration.md)
 
 ## GitOps examples
 
-| Tool | File |
-|------|------|
-| ArgoCD | [examples/argocd-app.yaml](examples/argocd-app.yaml) |
-| Flux | [examples/flux-helmrelease.yaml](examples/flux-helmrelease.yaml) |
-| Kustomize | [examples/kustomize/](examples/kustomize/) |
+| Tool      | File                                                             |
+| --------- | ---------------------------------------------------------------- |
+| ArgoCD    | [examples/argocd-app.yaml](examples/argocd-app.yaml)             |
+| Flux      | [examples/flux-helmrelease.yaml](examples/flux-helmrelease.yaml) |
+| Kustomize | [examples/kustomize/](examples/kustomize/)                       |
 
 ## Upgrading
 
 ```bash
 helm upgrade costpilot \
-  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
+  oci://ghcr.io/cost-pilot/helm/agent \
   --namespace costpilot \
   --reuse-values
 ```
@@ -112,13 +112,14 @@ See [docs/rbac.md](docs/rbac.md) for the full RBAC breakdown.
 Agent images and Helm charts are published automatically on each version tag. See [Releases](https://github.com/cost-pilot/public/releases) for changelogs and install assets.
 
 Each release includes:
+
 - A Helm chart `.tgz` for air-gapped installs
 - An `install.yaml` manifest for `kubectl apply` without Helm
 
-| Artefact | Registry |
-|----------|----------|
-| Agent image | `ghcr.io/cost-pilot/agent:{version}` |
-| Helm chart (OCI) | `oci://ghcr.io/cost-pilot/helm/cost-pilot-agent:{version}` |
+| Artefact         | Registry                                                   |
+| ---------------- | ---------------------------------------------------------- |
+| Agent image      | `ghcr.io/cost-pilot/agent:{version}`                       |
+| Helm chart (OCI) | `oci://ghcr.io/cost-pilot/helm/agent:{version}` |
 
 ## Support
 

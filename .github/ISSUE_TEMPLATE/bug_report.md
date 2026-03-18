@@ -21,8 +21,8 @@ labels: bug
 <!-- Please include output of:
 kubectl get all -n costpilot
 kubectl get events -n costpilot --sort-by='.lastTimestamp'
-kubectl logs -n costpilot -l app=cost-pilot-operator --tail=50
-kubectl logs -n costpilot -l app=cost-pilot-agent --tail=50
+kubectl logs -n costpilot -l app=costpilot-operator --tail=50
+kubectl logs -n costpilot -l app=costpilot-agent --tail=50
 -->
 
 ```

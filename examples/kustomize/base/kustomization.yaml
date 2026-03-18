@@ -10,7 +10,7 @@ namespace: costpilot
 
 # If using kustomize's helmCharts field (kustomize 5.x):
 helmCharts:
-  - name: cost-pilot-agent
+  - name: agent
     repo: oci://ghcr.io/cost-pilot/helm
     version: "0.1.0"
     releaseName: costpilot

@@ -20,7 +20,7 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: cost-pilot-agent
+      chart: agent
       version: "0.1.0" # pin to a specific release
       sourceRef:
         kind: HelmRepository

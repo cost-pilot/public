@@ -5,7 +5,7 @@
 Check operator logs first — the operator creates and manages agent pods:
 
 ```bash
-kubectl logs -n costpilot -l app=cost-pilot-operator
+kubectl logs -n costpilot -l app=costpilot-operator
 ```
 
 Common causes:
@@ -17,7 +17,7 @@ Common causes:
 
 1. Check agent logs:
    ```bash
-   kubectl logs -n costpilot -l app=cost-pilot-agent
+   kubectl logs -n costpilot -l app=costpilot-agent
    ```
 2. Confirm the correct region is set (`backend.ingesterEndpoint: eu`)
 3. Verify network egress is allowed — the agent needs outbound HTTPS to `ingest.eu.cost-pilot.com`
@@ -25,7 +25,7 @@ Common causes:
 ## Checking agent connectivity
 
 ```bash
-kubectl exec -n costpilot deploy/cost-pilot-operator -- \
+kubectl exec -n costpilot deploy/costpilot-operator -- \
   wget -qO- https://ingest.eu.cost-pilot.com/health
 ```
 
@@ -41,14 +41,14 @@ Make sure you're using the correct chart name:
 
 ```bash
 helm upgrade --install costpilot \
-  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
+  oci://ghcr.io/cost-pilot/helm/agent \
   --namespace costpilot
 ```
 
 If you're behind a registry mirror that doesn't support OCI, download the chart `.tgz` from the [releases page](https://github.com/cost-pilot/public/releases) and install directly:
 
 ```bash
-helm upgrade --install costpilot ./cost-pilot-agent-0.1.0.tgz \
+helm upgrade --install costpilot ./agent-0.1.0.tgz \
   --namespace costpilot
 ```
 

@@ -87,7 +87,7 @@ Apply with:
 
 ```bash
 helm upgrade --install costpilot \
-  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \
+  oci://ghcr.io/cost-pilot/helm/agent \
   --namespace costpilot \
   --values my-values.yaml
 ```

@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     # OCI Helm chart from GHCR
-    chart: cost-pilot-agent
+    chart: agent
     repoURL: ghcr.io/cost-pilot/helm
     targetRevision: "0.1.0" # pin to a specific release
     helm:

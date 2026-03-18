@@ -37,14 +37,14 @@ jobs:
         run: |
           VERSION_NUM="${TAG#v}"
           mkdir -p ./charts
-          helm pull "oci://${REGISTRY}/${CHART_PREFIX}/cost-pilot-agent" \
+          helm pull "oci://${REGISTRY}/${CHART_PREFIX}/agent" \
             --version "${VERSION_NUM}" \
             --destination ./charts
 
       - name: Render install.yaml
         run: |
           VERSION_NUM="${TAG#v}"
-          CHART_FILE=$(ls ./charts/cost-pilot-agent-*.tgz | head -n 1)
+          CHART_FILE=$(ls ./charts/agent-*.tgz | head -n 1)
           helm template costpilot "${CHART_FILE}" \
             --namespace costpilot \
             --set image.tag="${VERSION_NUM}" \
@@ -59,7 +59,7 @@ jobs:
             printf "### Install\n\n"
             printf '```bash\n'
             printf "helm upgrade --install costpilot \\\\\n"
-            printf "  oci://ghcr.io/cost-pilot/helm/cost-pilot-agent \\\\\n"
+            printf "  oci://ghcr.io/cost-pilot/helm/agent \\\\\n"
             printf "  --version %s \\\\\n" "${VERSION_NUM}"
             printf "  --namespace costpilot --create-namespace \\\\\n"
             printf "  --set backend.ingesterEndpoint=eu\n"
@@ -72,7 +72,7 @@ jobs:
             printf "| Artefact | Reference |\n"
             printf "|----------|-----------|\n"
             printf "| Agent image | \`ghcr.io/cost-pilot/agent:%s\` |\n" "${VERSION_NUM}"
-            printf "| Helm chart (OCI) | \`oci://ghcr.io/cost-pilot/helm/cost-pilot-agent:%s\` |\n" "${VERSION_NUM}"
+            printf "| Helm chart (OCI) | \`oci://ghcr.io/cost-pilot/helm/agent:%s\` |\n" "${VERSION_NUM}"
           } > ./release-notes.md
 
       - name: Create GitHub Release
@@ -80,9 +80,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION_NUM="${TAG#v}"
-          CHART_FILE=$(ls ./charts/cost-pilot-agent-*.tgz | head -n 1)
+          CHART_FILE=$(ls ./charts/agent-*.tgz | head -n 1)
           gh release create "${TAG}" \
             --title "CostPilot Agent ${TAG}" \
             --notes-file ./release-notes.md \
-            "${CHART_FILE}#Helm chart (cost-pilot-agent-${VERSION_NUM}.tgz)" \
+            "${CHART_FILE}#Helm chart (agent-${VERSION_NUM}.tgz)" \
             "install.yaml#Default install manifest (install.yaml)"
