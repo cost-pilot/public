@@ -3,6 +3,14 @@
 [![Release](https://img.shields.io/github/v/release/cost-pilot/public?label=latest)](https://github.com/cost-pilot/public/releases)
 [![Helm](https://img.shields.io/badge/Helm-OCI-blue)](https://github.com/orgs/cost-pilot/packages)
 
+| Service | Status |
+|---------|--------|
+| Web | [![Web](https://uptime.betterstack.com/status-badges/v2/monitor/2ewn8.svg)](https://status.cost-pilot.com/?utm_source=status_badge) |
+| Application | [![Application](https://uptime.betterstack.com/status-badges/v2/monitor/2il47.svg)](https://status.cost-pilot.com/?utm_source=status_badge) |
+| MCP Worker | [![MCP Worker](https://uptime.betterstack.com/status-badges/v2/monitor/2il44.svg)](https://status.cost-pilot.com/?utm_source=status_badge) |
+| Ingest Worker | [![Ingest Worker](https://uptime.betterstack.com/status-badges/v2/monitor/2il43.svg)](https://status.cost-pilot.com/?utm_source=status_badge) |
+| Edge API | [![Edge API](https://uptime.betterstack.com/status-badges/v2/monitor/2il41.svg)](https://status.cost-pilot.com/?utm_source=status_badge) |
+
 Kubernetes cost visibility and optimisation for engineering teams. CostPilot breaks down your spend by namespace, workload, team, and label — with 50+ automated efficiency insights to help you act.
 
 ## How it works
@@ -116,9 +124,9 @@ Each release includes:
 - A Helm chart `.tgz` for air-gapped installs
 - An `install.yaml` manifest for `kubectl apply` without Helm
 
-| Artefact         | Registry                                                   |
-| ---------------- | ---------------------------------------------------------- |
-| Agent image      | `ghcr.io/cost-pilot/agent:{version}`                       |
+| Artefact         | Registry                                        |
+| ---------------- | ----------------------------------------------- |
+| Agent image      | `ghcr.io/cost-pilot/agent:{version}`            |
 | Helm chart (OCI) | `oci://ghcr.io/cost-pilot/helm/agent:{version}` |
 
 ## Support
